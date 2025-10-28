@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Mayurj5842/MyProject18'
+            }
+        }
+
+        stage('Build Java') {
+            steps {
+                script {
+                    if (fileExists('simple.java')) {
+                        echo "Compiling and running Java program..."
+                        bat 'javac simple.java'
+                        bat 'java simple'
+                    } else {
+                        echo 'No Java file found!'
+                    }
+                }
+            }
+        }
+
+        stage('Run Python') {
+            steps {
+                script {
+                    if (fileExists('sample.py')) {
+                        echo "Running Python script..."
+                        bat 'python sample.py'
+                    } else {
+                        echo 'No Python file found!'
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline completed successfully!"
+        }
+        failure {
+            echo "Pipeline failed!"
+        }
+    }
+}
+
